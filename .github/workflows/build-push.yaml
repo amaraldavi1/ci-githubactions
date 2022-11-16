@@ -24,5 +24,5 @@ jobs:
 
 
       - name: Push image
-        run: docker push ${{ secrets.DOCKER_USER }}/meu-custom-nginx
+        run: docker push ${{ secrets.DOCKER_USER }}/meu-custom-nginx:$(date +%s)
 
