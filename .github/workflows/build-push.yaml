@@ -12,16 +12,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Docker Login
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
-      - name: Build and push Docker images
-        uses: docker/build-push-action@v3.2.0
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_TOKEN }}
-          repository: amaraldavi1/meu-custom-nginx
-          tags: latest, ${{ github.run_number }}
-          push: true
-          file: Dockerfile
-          context: .
+      - name: Build image
+        run: docker build . --file Dockerfile --tag amaraldavi/meu-custom-nginx:$(date +%s)
 
+
+      - name: Push image
+        run: docker push ${{ secrets.DOCKER_USER }}/meu-custom-nginx
 
