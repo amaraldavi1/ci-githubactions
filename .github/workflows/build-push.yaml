@@ -20,5 +20,8 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
           repository: amaraldavi1/meu-custom-nginx
           tags: latest, ${{ github.run_number }}
+          push: ${{ github.ref_type == 'tag' }}
+          file: Dockerfile
+          context: .
 
 
