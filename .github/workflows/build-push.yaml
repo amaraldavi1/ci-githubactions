@@ -10,7 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Build-Image
-        run: docker build . --file Dockerfile --tag my-custom-nginx
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v3.2.0
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+          repository: amaraldavi1/meu-custom-nginx
+          tags: latest, ${{ github.run_number }}
+
+
