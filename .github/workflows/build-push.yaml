@@ -6,23 +6,40 @@ on:
       - "master"
        
 jobs:
-  build-container:
+  build-and-push:
     runs-on: ubuntu-latest
 
+    ### Using maretplace actions
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Docker Login
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
-        run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        uses: docker/login-action@v2.1.0
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v3.2.0
+        with:
+          context: .
+          push: true
+          tags: amaraldavi1/meu-custom-nginx:${{ github.run_number }}
 
-      - name: Build image
-        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USER }}/meu-custom-nginx
+    ### Without using marketplace actions
+    # steps:
+    #   - name: Checkout code
+    #     uses: actions/checkout@v3
+    #   - name: Docker Login
+    #     env:
+    #       DOCKER_USER: ${{ secrets.DOCKER_USER }}
+    #       DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+    #     run: |
+    #       docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+    #   - name: Build image
+    #     run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USER }}/meu-custom-nginx
 
 
-      - name: Push image
-        run: docker push ${{ secrets.DOCKER_USER }}/meu-custom-nginx
+    #   - name: Push image
+    #     run: docker push ${{ secrets.DOCKER_USER }}/meu-custom-nginx
 
