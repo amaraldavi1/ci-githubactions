@@ -20,9 +20,9 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
       - name: Build image
-        run: docker build . --file Dockerfile --tag amaraldavi/meu-custom-nginx:$(date +%s)
+        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USER }}/meu-custom-nginx
 
 
       - name: Push image
-        run: docker push ${{ secrets.DOCKER_USER }}/meu-custom-nginx:$(date +%s)
+        run: docker push ${{ secrets.DOCKER_USER }}/meu-custom-nginx
 
